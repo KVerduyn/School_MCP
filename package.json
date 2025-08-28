@@ -1,0 +1,29 @@
+{
+  "name": "school-vacation-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for school vacation calendar lookups",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "dev:http": "tsx src/http-server.ts",
+    "dev:mcp": "tsx src/mcp-http-server.ts",
+    "start": "node dist/index.js",
+    "start:http": "node dist/http-server.js",
+    "start:mcp": "node dist/mcp-http-server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.4.0",
+    "csv-parser": "^3.0.0",
+    "express": "^4.18.0",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/express": "^4.17.0",
+    "@types/cors": "^2.8.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}
