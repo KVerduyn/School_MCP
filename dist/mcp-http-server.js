@@ -3,7 +3,8 @@ import express from 'express';
 import cors from 'cors';
 import { CalendarData } from './calendar-data.js';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
+import { CallToolRequestSchema, ListToolsRequestSchema, LATEST_PROTOCOL_VERSION } from '@modelcontextprotocol/sdk/types.js';
+import { authMiddleware, auditLogMiddleware } from './auth.js';
 const app = express();
 const PORT = parseInt(process.env.PORT || '3000', 10);
 const calendarData = new CalendarData();
@@ -13,6 +14,7 @@ app.use(express.json());
 const mcpServer = new Server({
     name: 'school-vacation-mcp',
     version: '1.0.0',
+}, {
     capabilities: {
         tools: {},
     },
@@ -162,7 +164,8 @@ app.get('/ping', (req, res) => {
     });
 });
 // MCP streaming endpoint for LibreChat - JSON-RPC 2.0 format
-app.post('/mcp', async (req, res) => {
+// Apply authentication and audit logging middleware
+app.post('/mcp', auditLogMiddleware, authMiddleware, async (req, res) => {
     try {
         const request = req.body;
         console.log('MCP request:', JSON.stringify(request, null, 2));
@@ -193,7 +196,7 @@ app.post('/mcp', async (req, res) => {
                 jsonrpc: '2.0',
                 id: request.id,
                 result: {
-                    protocolVersion: '2024-11-05',
+                    protocolVersion: LATEST_PROTOCOL_VERSION,
                     capabilities: {
                         tools: {},
                     },

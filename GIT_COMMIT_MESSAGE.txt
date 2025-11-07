@@ -1,0 +1,46 @@
+Refactor: Update MCP server to 2025-06-18 specification
+
+Major version upgrade and security enhancements:
+
+Changes:
+- Upgrade @modelcontextprotocol/sdk from v0.4.0 to v1.21.0
+- Update protocol version from 2024-11-05 to 2025-06-18
+- Fix breaking changes in Server constructor API
+- Add token-based authentication system
+- Implement audit logging for security
+- Add comprehensive documentation
+
+Modified Files:
+- package.json: Update SDK dependency
+- src/index.ts: Fix Server constructor API
+- src/mcp-http-server.ts: Add protocol version constant & auth
+- docker-compose.yml: Add MCP_AUTH_TOKEN environment variable
+
+New Files:
+- src/auth.ts: Authentication & audit logging middleware
+- README.md: Complete project documentation
+- MCP_COMPLIANCE.md: Detailed compliance report (9.9 KB)
+- UPGRADE_SUMMARY.md: Quick upgrade reference guide (5.4 KB)
+- .env.example: Configuration template
+
+Security Improvements:
+- Token-based authentication via MCP_AUTH_TOKEN
+- Development mode (no auth) when token not set
+- Production mode requires Bearer token
+- Audit logging for all MCP requests
+- Proper JSON-RPC error codes for auth failures
+
+Testing:
+- All server modes tested (stdio, HTTP, combined)
+- Protocol version negotiation verified
+- Tool listing and execution confirmed
+- Authentication system validated
+
+Breaking Changes:
+Server constructor signature changed from single object to
+two parameters (server info, options).
+
+See UPGRADE_SUMMARY.md for migration guide.
+
+Compliance: MCP 2025-06-18 ✓
+Status: Production Ready ✓

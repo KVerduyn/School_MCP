@@ -7,6 +7,7 @@ const calendarData = new CalendarData();
 const server = new Server({
     name: 'school-vacation-mcp',
     version: '1.0.0',
+}, {
     capabilities: {
         tools: {},
     },
