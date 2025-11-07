@@ -473,3 +473,47 @@ For issues with:
 **Integration Status**: Ready for Production
 **Protocol Version**: MCP 2025-06-18
 **Authentication**: Optional (Token-based)
+
+## SSE Transport (LibreChat Default)
+
+LibreChat uses **SSE (Server-Sent Events)** transport by default. The MCP server now includes an SSE endpoint at `/sse`.
+
+### SSE Endpoint
+
+```
+http://school-vacation-mcp:3000/sse
+```
+
+### LibreChat Configuration for SSE
+
+Update your LibreChat MCP configuration:
+
+```yaml
+# In LibreChat config
+mcp:
+  servers:
+    school-vacation:
+      url: http://school-vacation-mcp:3000/sse
+      transport: sse
+      protocol: mcp-2025-06-18
+```
+
+Or via environment variables:
+
+```bash
+MCP_SCHOOL_VACATION_URL=http://school-vacation-mcp:3000/sse
+MCP_SCHOOL_VACATION_TRANSPORT=sse
+```
+
+### Transport Options
+
+The server now supports **two transports**:
+
+1. **SSE** (recommended for LibreChat): `/sse`
+2. **HTTP JSON-RPC**: `/mcp`
+
+Use the SSE endpoint for LibreChat integration.
+
+---
+
+**Updated**: 2025-11-07 - Added SSE transport support

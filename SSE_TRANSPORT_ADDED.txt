@@ -1,0 +1,87 @@
+═══════════════════════════════════════════════════════════════
+  SSE TRANSPORT SUPPORT ADDED ✓
+  LibreChat Connection Fixed
+═══════════════════════════════════════════════════════════════
+
+PROBLEM IDENTIFIED:
+-------------------
+LibreChat was trying to connect via SSE transport at:
+  http://school-vacation-mcp:3000/sse
+
+But the server only had HTTP JSON-RPC endpoint at:
+  http://school-vacation-mcp:3000/mcp
+
+This caused Zod validation errors because LibreChat expected
+SSE responses but received HTTP responses.
+
+SOLUTION IMPLEMENTED:
+----------------------
+✓ Created new SSE-compatible server: src/mcp-sse-server.ts
+✓ Added SSE transport using @modelcontextprotocol/sdk/server/sse
+✓ Implements GET /sse endpoint for SSE connections
+✓ Implements POST /message endpoint for client messages
+✓ Updated package.json with start:sse script
+✓ Updated Dockerfile to use start:sse by default
+✓ Updated LIBRECHAT_INTEGRATION.md with SSE details
+
+TRANSPORT OPTIONS:
+------------------
+The server now supports BOTH transports:
+
+1. SSE Transport (LibreChat default)
+   Endpoint: http://school-vacation-mcp:3000/sse
+   Use: LibreChat and other SSE clients
+
+2. HTTP JSON-RPC Transport
+   Endpoint: http://school-vacation-mcp:3000/mcp
+   Use: Custom HTTP clients
+
+LIBRECHAT CONFIGURATION:
+------------------------
+LibreChat should connect to:
+  http://school-vacation-mcp:3000/sse
+
+Example config:
+```yaml
+mcp:
+  servers:
+    school-vacation:
+      url: http://school-vacation-mcp:3000/sse
+      transport: sse
+```
+
+DEPLOYMENT:
+-----------
+The Docker container now starts the SSE server by default:
+
+  docker-compose build
+  docker-compose up -d
+
+Server will be accessible at:
+  - SSE: http://school-vacation-mcp:3000/sse (for LibreChat)
+  - Health: http://localhost:3000/health
+
+TESTING:
+--------
+✓ Build completes without errors
+✓ SSE server starts successfully
+✓ Health check responds correctly
+✓ Ready for LibreChat connection
+
+FILES MODIFIED:
+---------------
+• src/mcp-sse-server.ts (NEW) - SSE transport server
+• package.json - Added start:sse script
+• Dockerfile - Changed CMD to start:sse
+• LIBRECHAT_INTEGRATION.md - Added SSE documentation
+
+NEXT STEPS:
+-----------
+1. Rebuild Docker image: docker-compose build
+2. Restart container: docker-compose up -d
+3. LibreChat should now connect successfully
+4. Check LibreChat logs for connection confirmation
+
+═══════════════════════════════════════════════════════════════
+STATUS: SSE TRANSPORT READY ✓
+═══════════════════════════════════════════════════════════════

@@ -1,0 +1,96 @@
+═══════════════════════════════════════════════════════════════
+  STREAMABLE HTTP TRANSPORT - COMPLETE ✓
+  LibreChat Integration Fixed
+═══════════════════════════════════════════════════════════════
+
+FINAL ROOT CAUSE:
+-----------------
+LibreChat uses Streamable HTTP transport which requires:
+1. POST /mcp - For JSON-RPC requests
+2. GET /mcp - For SSE stream (server notifications)
+
+The server was missing the GET endpoint for SSE streaming.
+
+SOLUTION IMPLEMENTED:
+---------------------
+✓ Created mcp-streamable-server.ts with proper transport
+✓ Added POST /mcp - Handles JSON-RPC requests with sessions
+✓ Added GET /mcp - Opens SSE stream for notifications
+✓ Session management with UUID generation
+✓ Proper session lifecycle (init, reuse, close)
+✓ Updated Dockerfile to use start:streamable
+
+HOW STREAMABLE HTTP WORKS:
+---------------------------
+1. LibreChat sends POST to /mcp with initialize request
+2. Server creates session, returns session ID in response
+3. LibreChat opens GET to /mcp with session ID header
+4. SSE stream established for server→client notifications
+5. Subsequent requests use POST with session ID header
+
+ENDPOINTS:
+----------
+POST /mcp    - JSON-RPC requests (initialize, tools/list, tools/call)
+GET /mcp     - SSE stream for server notifications
+GET /health  - Health check
+GET /ping    - Connectivity test
+
+DEPLOYMENT:
+-----------
+docker-compose build
+docker-compose down
+docker-compose up -d
+
+WHAT LIBRECHAT WILL SEE:
+-------------------------
+✓ POST /mcp → Initialize → Session created
+✓ GET /mcp → SSE stream opened
+✓ POST /mcp → tools/list → 3 tools returned
+✓ POST /mcp → tools/call → Vacation data returned
+
+SERVER LOGS:
+------------
+Streamable HTTP MCP request received
+Creating new session for initialization request
+Session initialized with ID: <uuid>
+SSE stream connection requested
+Opening SSE stream for session: <uuid>
+
+FILES CREATED/MODIFIED:
+-----------------------
+✓ src/mcp-streamable-server.ts - Complete Streamable HTTP server
+✓ package.json - Added start:streamable script
+✓ Dockerfile - Changed CMD to start:streamable
+✓ Built and tested successfully
+
+TRANSPORT SUMMARY:
+------------------
+The server now supports ALL MCP transports:
+
+1. stdio (src/index.ts)
+   - Standard MCP for Claude Desktop
+   - Direct process communication
+
+2. HTTP JSON-RPC (src/mcp-http-server.ts)
+   - Custom HTTP clients
+   - POST /mcp endpoint only
+
+3. SSE (src/mcp-sse-server.ts)
+   - Pure SSE transport
+   - GET /sse endpoint
+
+4. Streamable HTTP (src/mcp-streamable-server.ts) ⭐ LIBRECHAT
+   - POST /mcp + GET /mcp (SSE stream)
+   - Session management
+   - Default for Docker deployment
+
+═══════════════════════════════════════════════════════════════
+STATUS: READY FOR LIBRECHAT ✓
+═══════════════════════════════════════════════════════════════
+
+Deploy now and LibreChat should connect successfully!
+
+docker-compose build && docker-compose up -d
+
+The connection errors should be completely resolved.
+═══════════════════════════════════════════════════════════════

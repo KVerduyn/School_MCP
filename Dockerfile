@@ -29,5 +29,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:3000/health || exit 1
 
-# Start the MCP HTTP server
-CMD ["npm", "run", "start:mcp"]
+# Start the MCP Streamable HTTP server (LibreChat compatible)
+CMD ["npm", "run", "start:streamable"]

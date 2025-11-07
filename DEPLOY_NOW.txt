@@ -1,0 +1,46 @@
+═══════════════════════════════════════════════════════════════
+  FINAL FIX APPLIED - DEPLOY NOW!
+═══════════════════════════════════════════════════════════════
+
+ISSUE FIXED:
+------------
+The GET /mcp endpoint wasn't keeping the SSE stream alive correctly.
+Fixed by removing auditLogMiddleware and using proper response handling.
+
+FINAL CHANGES:
+--------------
+✓ GET /mcp - Properly handles SSE stream (no middleware interference)
+✓ POST /mcp - Handles JSON-RPC with session management
+✓ Stream stays open for server notifications
+✓ Build successful
+
+DEPLOY COMMAND:
+---------------
+docker-compose build && docker-compose down && docker-compose up -d
+
+WHAT WILL HAPPEN:
+-----------------
+1. LibreChat POSTs initialize → Session created
+2. LibreChat GETs stream → SSE connection established & STAYS OPEN
+3. LibreChat POSTs tools/list → Tools returned
+4. LibreChat POSTs tools/call → Vacation data returned
+
+EXPECTED LOGS:
+--------------
+Streamable HTTP MCP request received
+Creating new session for initialization request
+Session initialized with ID: <uuid>
+SSE stream connection requested
+Establishing SSE stream for session: <uuid>
+[Connection stays open - no disconnect]
+
+VERIFY:
+-------
+After deployment, check LibreChat logs for:
+✓ "Connected to SCHOOL_VACATION_MCP"
+✓ No more "Transport error" messages
+✓ Tools available in UI
+
+═══════════════════════════════════════════════════════════════
+READY TO DEPLOY ✓
+═══════════════════════════════════════════════════════════════
